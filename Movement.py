@@ -18,18 +18,20 @@ class Moove():
 
     def VerifMovement(self,movement):
         return 
-                    
-        
-    def mooveRight(self,x,y,matrice):
-        self.MovementSpot= matrice[y-1][x]
-        return self.MovementSpot 
     
-    def test(self, matrice,x,y):
-        if matrice[y][x+1] ==0 or matrice[y][x+1] ==1:
+    def MooveRight(self, matrice,x,y , boxIn):
+        if matrice[y][x+1] ==0 :
             matrice[y][x]= 0
             matrice[y][x+1]= 3
-            x+=1
+            return True
+
+        elif matrice[y][x+1] ==1:
+            matrice[y][x]= 5
+            matrice[y][x+1]= 3
+            return True
+
         elif matrice[y][x+1] == 2:
+
             if matrice[y][x+2] ==-1:
                 return False
             
@@ -37,28 +39,168 @@ class Moove():
                 matrice[y][x]= 0
                 matrice[y][x+1]= 3
                 matrice[y][x+2] = 4
-                x+=1
-                print("bravo , la box a été poussé au bon endroit")                
-            elif matrice[y][x+2] == 0 or matrice[y][x+2] ==1:
+                print("bravo , la box a été poussé au bon endroit")   
+                boxIn -=1        
+                return True     
+
+            elif matrice[y][x+2] == 0:
                 matrice[y][x]= 0
                 matrice[y][x+1]= 3
                 matrice[y][x+2] = 2
-                x+=1
-            
+                return True
+
+
+        elif matrice[y][x+1] == -1:
+            return False
     
+        elif matrice[y][x+1] == 4:
+                matrice[y][x]= 0
+                matrice[y][x+1]= 6
+                return True
+        
+        elif matrice[y][x+1] ==5:
+            matrice[y][x]= 1
+            matrice[y][x+1]= 3
+            return True
+        
+        elif matrice[y][x+1] ==5:
+            matrice[y][x]= 1
+            matrice[y][x+1]= 3
+            return True
 
 
+    
+    def MooveLeft(self, matrice,x,y , boxIn):
+        if matrice[y][x-1] ==0 :
+            matrice[y][x]= 0
+            matrice[y][x-1]= 3
+            return True
 
-    # def mooveLeft(self):
-    #     self.MovementSpot= self.matriceMapMedium[self.Character_y][self.Character_x-1]
-    #     return self.MovementSpot
+        elif matrice[y][x-1] ==1:
+            matrice[y][x]= 5
+            matrice[y][x-1]= 3
+            return True
 
-    # def mooveUp(self):
-    #     self.MovementSpot= self.matriceMapMedium[self.Character_y-1][self.Character_x]
-    #     return self.MovementSpot
+        elif matrice[y][x-1] == 2:
 
-    # def mooveDown(self):  
-    #     self.MovementSpot= self.matriceMapMedium[self.Character_y+1][self.Character_x+1]
-    #     return self.MovementSpot
+            if matrice[y][x-2] ==-1:
+                return False
+            
+            elif matrice[y][x-2] == 1:
+                matrice[y][x]= 0
+                matrice[y][x-1]= 3
+                matrice[y][x-2] = 4
+                print("bravo , la box a été poussé au bon endroit")   
+                boxIn -=1        
+                return True     
 
+            elif matrice[y][x-2] == 0:
+                matrice[y][x]= 0
+                matrice[y][x-1]= 3
+                matrice[y][x-2] = 2
+                return True
+
+
+        elif matrice[y][x-1] == -1:
+            return False
+    
+        elif matrice[y][x-1] == 4:
+                matrice[y][x]= 4
+                matrice[y][x-1]= 3
+                return True
+        
+        elif matrice[y][x-1] ==5:
+            matrice[y][x]= 1
+            matrice[y][x-1]= 3
+            return True
+    
+    def MooveUp(self, matrice,x,y , boxIn):
+        if matrice[y-1][x] ==0 :
+            matrice[y][x]= 0
+            matrice[y-1][x]= 3
+            return True
+
+        elif matrice[y-1][x] ==1:
+            matrice[y][x]= 5
+            matrice[y-1][x]= 3
+            return True
+
+        elif matrice[y-1][x] == 2:
+
+            if matrice[y-2][x] ==-1:
+                return False
+            
+            elif matrice[y-2][x] == 1:
+                matrice[y][x]= 0
+                matrice[y-1][x]= 3
+                matrice[y-2][x] = 4
+                print("bravo , la box a été poussé au bon endroit")   
+                boxIn -=1        
+                return True     
+
+            elif matrice[y-2][x] == 0:
+                matrice[y][x]= 0
+                matrice[y-1][x]= 3
+                matrice[y-2][x] = 2
+                return True
+
+
+        elif matrice[y-1][x] == -1:
+            return False
+    
+        elif matrice[y-1][x] == 4:
+                matrice[y][x]= 4
+                matrice[y-1][x]= 3
+                return True
+        
+        elif matrice[y-1][x] ==5:
+            matrice[y][x]= 1
+            matrice[y-1][x]= 3
+            return True
+    
+    
+    def MooveDown(self, matrice,x,y , boxIn):
+        if matrice[y+1][x] ==0 :
+            matrice[y][x]= 0
+            matrice[y+1][x]= 3
+            return True
+
+        elif matrice[y+1][x] ==1:
+            matrice[y][x]= 5
+            matrice[y+1][x]= 3
+            return True
+
+        elif matrice[y+1][x] == 2:
+
+            if matrice[y+2][x] ==-1:
+                return False
+            
+            elif matrice[y+2][x] == 1:
+                matrice[y][x]= 0
+                matrice[y+1][x]= 3
+                matrice[y+2][x] = 4
+                print("bravo , la box a été poussé au bon endroit")   
+                boxIn -=1        
+                return True     
+
+            elif matrice[y+2][x] == 0:
+                matrice[y][x]= 0
+                matrice[y+1][x]= 3
+                matrice[y+2][x] = 2
+                return True
+
+
+        elif matrice[y+1][x] == -1:
+            return False
+    
+        elif matrice[y+1][x] == 4:
+                matrice[y][x]= 4
+                matrice[y+1][x]= 3
+                return True
+        
+        elif matrice[y+1][x] ==5:
+            matrice[y][x]= 1
+            matrice[y+1][x]= 3
+            return True
+    
 movement= Moove()
