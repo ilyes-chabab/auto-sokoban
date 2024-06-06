@@ -47,19 +47,15 @@ class Matrix:
         if self.matrix[new_x][new_y] == -1:
             print("Move blocked by a wall!")
             return
-        
-        
+
         if self.matrix[new_x][new_y] == 2:
             push_x, push_y = new_x + (new_x - x), new_y + (new_y - y)
             if self.matrix[push_x][push_y] in (0, 1):
-                
+                if self.matrix[push_x][push_y] == 1:
+                    print("Box in place!")
                 self.matrix[push_x][push_y] = 2
                 self.matrix[new_x][new_y] = 3
                 self.matrix[x][y] = 0
-
-            elif self.matrix[push_x][push_y] in (-1):
-                print("Box in place !")
-
             else:
                 print("Move blocked by another box or a wall!")
                 return
@@ -67,24 +63,33 @@ class Matrix:
             self.matrix[new_x][new_y] = 3
             self.matrix[x][y] = 0
         
-    def check_for_box(self):
-        position = np.argwhere(self.matrix == 2)
-        print (position)
+        # Check if any box is in a hole after the move
+        self.check_box_in_hole()
 
+    def check_for_box(self):
+        return np.argwhere(self.matrix == 2)
     
+    def check_for_hole(self):
+        return np.argwhere(self.matrix == 1)
+    
+    def check_box_in_hole(self):
+        holes = self.check_for_hole()
+        boxes = self.check_for_box()
+        for hole in holes:
+            if any(np.array_equal(hole, box) for box in boxes):
+                print("Box in place at position:", hole.tolist())
+
 matrix = Matrix()
 
-# matrix.find_player()
+# Example of moving the player and pushing boxes
+matrix.move_player("right")
+matrix.move_player("right")
+matrix.move_player("right")
+matrix.move_player("right")
+matrix.move_player("up")
+matrix.move_player("right")
+matrix.move_player("down")
+matrix.move_player("down")
+matrix.move_player("down")
 
-# matrix.move_player("right")
-# matrix.move_player("right")
-# matrix.move_player("right")
-# matrix.move_player("right")
-# matrix.move_player("up")
-# matrix.move_player("right")
-# matrix.move_player("down")
-# matrix.move_player("down")
-# matrix.move_player("down")
-
-matrix.check_for_box()
 matrix.show_matrix()
