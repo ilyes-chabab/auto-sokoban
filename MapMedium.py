@@ -20,7 +20,8 @@ class Game:
                                 [-1,-1,-1,-1,-1,-1,-1,-1,-1]]
         self.Character_x=4
         self.Character_y = 6
-        self.BoxInSpot =3
+        self.character_pos= self.Character_x , self.Character_y
+        self.BoxInSpot =0
         self.last_matriceMapMedium = []
         self.last_Character_x=0
         self.last_Character_y = 0
@@ -48,6 +49,10 @@ class Game:
         self.SpotBox=pygame.transform.scale(self.initSpotBox , (60,60))
         self.initBoxIn = pygame.image.load('image/crate_10.png')
         self.BoxIn=pygame.transform.scale(self.initBoxIn , (60,60))
+        self.initButton_Retsart_Image = pygame.image.load('image/restart_button_image.jpg')
+        self.Button_Retsart_Image=pygame.transform.scale(self.initButton_Retsart_Image , (100,40))
+        self.initButton_Undo_Image = pygame.image.load('image/button_undo.png')
+        self.Button_Undo_Image=pygame.transform.scale(self.initButton_Undo_Image , (60,40))
 
         self.restart_button = pygame.Rect(900,0,100,40)
         self.Undo_button = pygame.Rect(940,40,100,40)
@@ -56,6 +61,9 @@ class Game:
         font=pygame.font.SysFont("arial",size)
         message = font.render(message,False,color)
         self.screen.blit(message,message_rectangle) 
+    
+    def distance_manhattan(self,x1,y1,x2,y2):
+        return abs(x1 - x2) + abs(y1 - y2)
     
     def displayMap(self):
     
@@ -131,6 +139,8 @@ class Game:
             self.displayMap()
             pygame.draw.rect(self.screen , (137,40,20), self.restart_button)
             pygame.draw.rect(self.screen , (137,40,20), self.Undo_button)
+            self.screen.blit(self.Button_Retsart_Image, (900,0))
+            self.screen.blit(self.Button_Undo_Image, (940,40))
             if self.win:
                 self.message(56,"Bravo , vous avez gagné!",(300,200,0,0),(0,0,0))
             
@@ -191,6 +201,16 @@ class Game:
                         if self.movement.MooveUp(self.matriceMapMedium, self.Character_x , self.Character_y , self.BoxInSpot) :
                             if self.Character_y >1:
                                 self.Character_y -=1
+                    
+                    elif event.key == pygame.K_RETURN:
+                        nb_box = 0
+                        for i in range(9):
+                            for j in range(9):
+                                if self.matriceMapMedium[i][j] == 2:
+                                    print(self.Character_x, self.Character_y ,  j , i  )
+                                    nb_box+=1
+                                    distance = self.distance_manhattan(self.Character_x, self.Character_y ,  j , i )
+                                    print(f"la distance entre la box {nb_box} et le personnage est de {distance}")
                             
 
             pygame.display.flip()
