@@ -28,7 +28,7 @@ class Matrix:
     def move_player(self, direction):
         player_pos = self.find_player()
         if player_pos is None:
-            print("Player not found!")
+            print("Joueur introuvable !")
             return
 
         x, y = player_pos
@@ -41,55 +41,66 @@ class Matrix:
         elif direction == "right":
             new_x, new_y = x, y + 1
         else:
-            print("Invalid direction!")
+            print("Direction invalide")
             return
 
         if self.matrix[new_x][new_y] == -1:
-            print("Move blocked by a wall!")
+            print("MUR !")
             return
 
         if self.matrix[new_x][new_y] == 2:
             push_x, push_y = new_x + (new_x - x), new_y + (new_y - y)
             if self.matrix[push_x][push_y] in (0, 1):
                 if self.matrix[push_x][push_y] == 1:
-                    print("Box in place!")
+                    print("Caisse en place")
                 self.matrix[push_x][push_y] = 2
                 self.matrix[new_x][new_y] = 3
                 self.matrix[x][y] = 0
             else:
-                print("Move blocked by another box or a wall!")
+                print("Caisse bloqué par un mur ou une autre caisse")
                 return
         else:
             self.matrix[new_x][new_y] = 3
             self.matrix[x][y] = 0
         
-        # Check if any box is in a hole after the move
         self.check_box_in_hole()
 
     def check_for_box(self):
-        return np.argwhere(self.matrix == 2)
+        position = np.argwhere(self.matrix == 2)
+        for i in position:
+            print (i)
     
     def check_for_hole(self):
         return np.argwhere(self.matrix == 1)
     
-    def check_box_in_hole(self):
-        holes = self.check_for_hole()
-        boxes = self.check_for_box()
-        for hole in holes:
-            if any(np.array_equal(hole, box) for box in boxes):
-                print("Box in place at position:", hole.tolist())
 
 matrix = Matrix()
 
-# Example of moving the player and pushing boxes
-matrix.move_player("right")
-matrix.move_player("right")
-matrix.move_player("right")
-matrix.move_player("right")
-matrix.move_player("up")
-matrix.move_player("right")
-matrix.move_player("down")
-matrix.move_player("down")
-matrix.move_player("down")
 
-matrix.show_matrix()
+# matrix.move_player("right")
+# matrix.move_player("right")
+# matrix.move_player("right")
+# matrix.move_player("right")
+# matrix.move_player("up")
+# matrix.move_player("right")
+# matrix.move_player("down")
+# matrix.move_player("down")
+# matrix.move_player("down")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("left")
+# matrix.move_player("up")
+# matrix.move_player("left")
+# matrix.move_player("down")
+
+print(matrix.find_player())
+
+print (matrix.check_for_box())
+
+# matrix.show_matrix()
