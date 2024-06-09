@@ -6,17 +6,19 @@ class Game:
     def __init__(self):
         self.movement = Moove()
         # matrice of the map 
-        self.matriceMapMedium = [[-1,-1,-1,-1,-1,-1,-1,-1,-1],
-                                [-1,0 ,0 ,0 ,0 ,0 ,0 ,0 ,-1],
-                                [-1,0 ,2 ,0 ,0 ,0 ,2 ,0 ,-1],
-                                [-1,0 ,0 ,1 ,-1,1 ,0 ,0 ,-1],
-                                [-1,0 ,0 ,-1,-1,-1,0 ,0 ,-1],
-                                [-1,0 ,0 ,1 ,-1, 1,0 ,0 ,-1],
-                                [-1,0 ,2 ,0 ,3 ,0 ,2 ,0 ,-1],
-                                [-1,0 ,0 ,0 ,0 ,0 ,0 ,0 ,-1],
-                                [-1,-1,-1,-1,-1,-1,-1,-1,-1]]
-        self.Character_x = 4
-        self.Character_y = 6
+        # obstacle : -1, empty spot : 0, box spot : 1, Box : 2,Player : 3 , BoxIn : 4 , Player On box Spot : 5 , player on box : 6 
+        self.matriceMapMedium = [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                                 [-1,  0,  0,  0, -1, -1,  0,  0,  0, -1],
+                                 [-1,  0,  2,  0,  0, -1,  0,  2,  0, -1],
+                                 [-1,  0,  0,  0,  0,  1,  0,  0,  0, -1],
+                                 [-1, -1, -1,  0, -1, -1, -1,  0, -1, -1],
+                                 [-1,  0,  0,  0,  0,  3,  0,  0,  0, -1],
+                                 [-1,  0,  2,  0, -1,  0,  0,  2,  0, -1],
+                                 [-1,  0,  0,  0,  1,  0,  0,  0,  0, -1],
+                                 [-1,  0,  1,  0,  0,  0,  1,  0,  0, -1],
+                                 [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
+        self.Character_x = 5
+        self.Character_y = 5
         self.character_pos = self.Character_x, self.Character_y
         self.BoxInSpot = 0
         self.last_matriceMapMedium = []
@@ -64,10 +66,10 @@ class Game:
 
     def displayMap(self):
         y = -30
-        for i in range(9):
+        for i in range(len(self.matriceMapMedium)):  # Changed to dynamically get row count
             y += 60
             x = 200
-            for j in range(9):
+            for j in range(len(self.matriceMapMedium[i])):  # Changed to dynamically get column count
                 x += 60
                 if self.matriceMapMedium[i][j] == -1:
                     self.screen.blit(self.OakWall, (x, y))
@@ -89,17 +91,18 @@ class Game:
                     self.screen.blit(self.OakBlock, (x, y))
 
     def restart(self):
-        self.matriceMapMedium = [[-1, -1, -1, -1, -1, -1, -1, -1, -1],
-                                [-1, 0, 0, 0, 0, 0, 0, 0, -1],
-                                [-1, 0, 2, 0, 0, 0, 2, 0, -1],
-                                [-1, 0, 0, 1, -1, 1, 0, 0, -1],
-                                [-1, 0, 0, -1, -1, -1, 0, 0, -1],
-                                [-1, 0, 0, 1, -1, 1, 0, 0, -1],
-                                [-1, 0, 2, 0, 3, 0, 2, 0, -1],
-                                [-1, 0, 0, 0, 0, 0, 0, 0, -1],
-                                [-1, -1, -1, -1, -1, -1, -1, -1, -1]]
-        self.Character_x = 4
-        self.Character_y = 6
+        self.matriceMapMedium = [[-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                                 [-1,  0,  0,  0, -1, -1,  0,  0,  0, -1],
+                                 [-1,  0,  2,  0,  0, -1,  0,  2,  0, -1],
+                                 [-1,  0,  0,  0,  0,  1,  0,  0,  0, -1],
+                                 [-1, -1, -1,  0, -1, -1, -1,  0, -1, -1],
+                                 [-1,  0,  0,  0,  0,  3,  0,  0,  0, -1],
+                                 [-1,  0,  2,  0, -1,  0,  0,  2,  0, -1],
+                                 [-1,  0,  0,  0,  1,  0,  0,  0,  0, -1],
+                                 [-1,  0,  1,  0,  0,  0,  1,  0,  0, -1],
+                                 [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
+        self.Character_x = 5
+        self.Character_y = 5
         self.BoxInSpot = 0
         self.win = False
         self.displayMap()
@@ -119,7 +122,7 @@ class Game:
         visited = set()
         parent = {start: None}
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        
+
         while queue:
             current = queue.popleft()
             if current == goal:
@@ -128,23 +131,18 @@ class Game:
                     path.append(current)
                     current = parent[current]
                 return path[::-1]
-            
             for direction in directions:
-                next_x, next_y = current[0] + direction[0], current[1] + direction[1]
-                if (next_x, next_y) not in visited and self.matriceMapMedium[next_y][next_x] in {0, 1}:
-                    visited.add((next_x, next_y))
-                    queue.append((next_x, next_y))
-                    parent[(next_x, next_y)] = current
-        
+                neighbor = (current[0] + direction[0], current[1] + direction[1])
+                if neighbor not in visited and self.matriceMapMedium[neighbor[1]][neighbor[0]] in [0, 1]:
+                    visited.add(neighbor)
+                    parent[neighbor] = current
+                    queue.append(neighbor)
         return None
 
     def solve(self):
-        box_positions = [(j, i) for i in range(9) for j in range(9) if self.matriceMapMedium[i][j] == 2]
-        goal_positions = [(j, i) for i in range(9) for j in range(9) if self.matriceMapMedium[i][j] == 1]
-        if len(box_positions) != len(goal_positions):
-            return
-        
-        # Solve for each box to reach the goal
+        box_positions = [(x, y) for y in range(len(self.matriceMapMedium)) for x in range(len(self.matriceMapMedium[y])) if self.matriceMapMedium[y][x] == 2]
+        goal_positions = [(x, y) for y in range(len(self.matriceMapMedium)) for x in range(len(self.matriceMapMedium[y])) if self.matriceMapMedium[y][x] == 1]
+
         for box in box_positions:
             for goal in goal_positions:
                 path = self.bfs(box, goal)
@@ -188,7 +186,7 @@ class Game:
                         if self.movement.verifBoxInRight(self.matriceMapMedium, self.Character_x, self.Character_y):
                             self.BoxInSpot += 1
                         if self.movement.MooveRight(self.matriceMapMedium, self.Character_x, self.Character_y, self.BoxInSpot):
-                            if self.Character_x < 7:
+                            if self.Character_x < 9:
                                 self.Character_x += 1
                     elif event.key == pygame.K_LEFT:
                         self.save_last_move()
@@ -202,7 +200,7 @@ class Game:
                         if self.movement.verifBoxInDown(self.matriceMapMedium, self.Character_x, self.Character_y):
                             self.BoxInSpot += 1
                         if self.movement.MooveDown(self.matriceMapMedium, self.Character_x, self.Character_y, self.BoxInSpot):
-                            if self.Character_y < 7:
+                            if self.Character_y < 9:
                                 self.Character_y += 1
                     elif event.key == pygame.K_UP:
                         self.save_last_move()
